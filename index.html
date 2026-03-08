@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>One Year of Us 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --rose:#f2c4ce; --blush:#fde8ed; --lavender:#e8dff5;
+    --cream:#fdf7f0; --dusty:#c9a7b8; --text:#5a3e4b; --soft:#9b7b8c;
+  }
+  html { scroll-behavior: smooth; }
+  body { background:var(--cream); color:var(--text); font-family:'Lato',sans-serif; font-weight:300; overflow-x:hidden; }
+
+  .petal-bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .petal { position:absolute; opacity:0; animation:fall linear infinite; }
+  @keyframes fall {
+    0%   { transform:translateY(-40px) rotate(0deg); opacity:0; }
+    10%  { opacity:0.4; } 90% { opacity:0.2; }
+    100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
+  }
+
+  .hero {
+    position:relative; z-index:1; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:2rem;
+    background:radial-gradient(ellipse at 60% 40%,#fde8ed 0%,#e8dff5 50%,#fdf7f0 100%);
+  }
+  .hero-tag { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(.9rem,2vw,1.1rem); color:var(--dusty); letter-spacing:.2em; margin-bottom:1.2rem; opacity:0; animation:fadeUp 1s .3s forwards; }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,10vw,7rem); font-weight:300; line-height:1.05; color:var(--text); opacity:0; animation:fadeUp 1s .6s forwards; }
+  .hero-title em { font-style:italic; color:var(--dusty); }
+  .hero-subtitle { margin-top:1.5rem; font-size:clamp(.9rem,2vw,1.05rem); color:var(--soft); letter-spacing:.15em; text-transform:uppercase; opacity:0; animation:fadeUp 1s .9s forwards; }
+  .hero-date { margin-top:.6rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.1rem,2.5vw,1.4rem); color:var(--dusty); opacity:0; animation:fadeUp 1s 1.1s forwards; }
+  .scroll-hint { margin-top:3rem; display:flex; flex-direction:column; align-items:center; gap:.5rem; opacity:0; animation:fadeUp 1s 1.5s forwards; color:var(--soft); font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; }
+  .scroll-hint .line { width:1px; height:50px; background:linear-gradient(to bottom,transparent,var(--dusty)); animation:growLine 2s 2s ease-in-out infinite alternate; }
+  @keyframes growLine { from{height:30px} to{height:60px} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .section { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:4rem 1.5rem; }
+  .section-label { text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--dusty); letter-spacing:.2em; margin-bottom:.4rem; }
+  .section-title { text-align:center; font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,5vw,3rem); font-weight:300; color:var(--text); margin-bottom:3.5rem; }
+
+  .timeline { position:relative; padding:0 0 2rem; }
+  .timeline::before { content:''; position:absolute; left:50%; transform:translateX(-50%); top:0; bottom:0; width:1px; background:linear-gradient(to bottom,transparent,var(--rose) 10%,var(--rose) 90%,transparent); }
+  .tl-item { display:flex; align-items:flex-start; gap:2rem; margin-bottom:4rem; opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+  .tl-item.visible { opacity:1; transform:translateY(0); }
+  .tl-item:nth-child(odd)  { flex-direction:row; }
+  .tl-item:nth-child(even) { flex-direction:row-reverse; }
+  .tl-content { flex:1; background:white; border-radius:20px; padding:1.6rem 1.8rem; box-shadow:0 4px 30px rgba(194,150,177,.12); border:1px solid rgba(242,196,206,.3); }
+  .tl-item:nth-child(odd)  .tl-content { border-radius:4px 20px 20px 20px; }
+  .tl-item:nth-child(even) .tl-content { border-radius:20px 4px 20px 20px; }
+  .tl-photo { width:100%; aspect-ratio:4/3; border-radius:12px; overflow:hidden; margin-bottom:1rem; background:linear-gradient(135deg,var(--blush),var(--lavender)); display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; }
+  .tl-photo input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .tl-photo img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+  .photo-placeholder { display:flex; flex-direction:column; align-items:center; gap:.5rem; color:var(--dusty); pointer-events:none; }
+  .photo-placeholder svg { width:32px; height:32px; opacity:.6; }
+  .photo-placeholder span { font-size:.78rem; letter-spacing:.1em; }
+  .tl-date { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.85rem; color:var(--dusty); margin-bottom:.4rem; }
+  .tl-milestone { font-family:'Cormorant Garamond',serif; font-size:1.35rem; color:var(--text); margin-bottom:.5rem; }
+  .tl-note { font-size:.88rem; color:var(--soft); line-height:1.7; }
+  .tl-dot { flex:0 0 14px; width:14px; height:14px; border-radius:50%; background:var(--rose); border:3px solid white; box-shadow:0 0 0 2px var(--rose); margin-top:1.8rem; }
+
+  /* QUIZ */
+  .quiz-section { position:relative; z-index:1; background:linear-gradient(160deg,#fdf0f5 0%,#f0ebfa 100%); padding:5rem 1.5rem; }
+  .quiz-inner { max-width:660px; margin:0 auto; }
+  .quiz-card { background:white; border-radius:24px; padding:clamp(2rem,5vw,3rem); box-shadow:0 8px 40px rgba(194,150,177,.18); border:1px solid rgba(242,196,206,.3); }
+  .quiz-progress-bar { height:3px; background:var(--blush); border-radius:2px; margin-bottom:1.8rem; overflow:hidden; }
+  .quiz-progress-fill { height:100%; background:linear-gradient(to right,var(--rose),var(--dusty)); border-radius:2px; transition:width .5s ease; width:0%; }
+  .quiz-progress-txt { font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:var(--dusty); margin-bottom:.6rem; }
+  .quiz-q { display:none; }
+  .quiz-q.active { display:block; animation:fadeUp .4s ease forwards; }
+  .quiz-question { font-family:'Cormorant Garamond',serif; font-size:clamp(1.3rem,3vw,1.7rem); color:var(--text); margin-bottom:1.5rem; line-height:1.4; }
+  .quiz-options { display:flex; flex-direction:column; gap:.75rem; }
+  .quiz-opt { padding:.85rem 1.2rem; border-radius:12px; border:1.5px solid var(--blush); background:transparent; color:var(--soft); font-family:'Lato',sans-serif; font-size:.93rem; cursor:pointer; text-align:left; transition:all .2s; }
+  .quiz-opt:hover:not(:disabled) { background:var(--blush); border-color:var(--rose); color:var(--text); }
+  .quiz-opt.correct { background:#d4f5e2; border-color:#7ecba1; color:#2d6a4f; }
+  .quiz-opt.wrong   { background:#fde8ed; border-color:var(--rose); color:#a0526a; }
+  .quiz-opt.reveal  { background:#d4f5e2; border-color:#7ecba1; color:#2d6a4f; }
+  .quiz-opt:disabled { cursor:default; }
+  .quiz-feedback { margin-top:1rem; font-style:italic; font-size:.88rem; color:var(--soft); min-height:1.3rem; opacity:0; transition:opacity .3s; }
+  .quiz-feedback.show { opacity:1; }
+  .quiz-next { margin-top:1.4rem; padding:.75rem 2rem; border-radius:50px; border:none; background:linear-gradient(135deg,var(--rose),var(--dusty)); color:white; font-family:'Lato',sans-serif; font-size:.88rem; letter-spacing:.1em; cursor:pointer; display:none; transition:opacity .2s; }
+  .quiz-next:hover { opacity:.85; }
+  .quiz-result { display:none; text-align:center; }
+  .quiz-result.active { display:block; animation:fadeUp .5s ease forwards; }
+  .quiz-score-big { font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,10vw,5.5rem); color:var(--dusty); line-height:1; }
+  .quiz-verdict { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.3rem,3vw,1.8rem); color:var(--text); margin:.5rem 0 .8rem; }
+  .quiz-verdict-sub { font-size:.9rem; color:var(--soft); line-height:1.8; }
+  .quiz-retry { margin-top:1.5rem; padding:.7rem 1.8rem; border-radius:50px; border:1.5px solid var(--rose); background:transparent; color:var(--dusty); font-family:'Lato',sans-serif; font-size:.85rem; cursor:pointer; transition:all .2s; }
+  .quiz-retry:hover { background:var(--blush); }
+
+  .letter-wrap { position:relative; z-index:1; background:linear-gradient(135deg,#fde8ed 0%,#e8dff5 100%); padding:5rem 1.5rem; }
+  .letter-card { max-width:660px; margin:0 auto; background:white; border-radius:24px; padding:clamp(2rem,5vw,3.5rem); box-shadow:0 20px 60px rgba(194,150,177,.2); position:relative; overflow:hidden; }
+  .letter-card::before { content:'❝'; position:absolute; top:-.5rem; left:1rem; font-size:8rem; color:var(--blush); font-family:Georgia,serif; line-height:1; pointer-events:none; }
+  .letter-label { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.9rem; color:var(--dusty); letter-spacing:.2em; margin-bottom:.5rem; text-align:center; }
+  .letter-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,4vw,2.6rem); font-weight:300; color:var(--text); text-align:center; margin-bottom:2rem; }
+  .letter-body { font-size:.97rem; line-height:2; color:var(--soft); font-style:italic; white-space:pre-line; }
+  .letter-sign { margin-top:2rem; text-align:right; font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; color:var(--dusty); }
+
+  .footer { position:relative; z-index:1; text-align:center; padding:3rem 1rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--dusty); }
+  .hearts { font-size:1.4rem; letter-spacing:.3rem; }
+
+  @media (max-width:600px) {
+    .timeline::before { left:20px; }
+    .tl-item, .tl-item:nth-child(even) { flex-direction:column !important; padding-left:48px; }
+    .tl-dot { position:absolute; left:13px; }
+    .tl-item { position:relative; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petal-bg" id="petalBg"></div>
+
+<section class="hero">
+  <p class="hero-tag">✦ a little love story ✦</p>
+  <h1 class="hero-title">One<br><em>Beautiful</em><br>Year</h1>
+  <p class="hero-subtitle">with you</p>
+  <p class="hero-date">— Your Date Here, 2024 → Your Date Here, 2025 —</p>
+  <div class="scroll-hint"><div class="line"></div><span>scroll through our story</span></div>
+</section>
+
+<div class="section">
+  <p class="section-label">chapter one</p>
+  <h2 class="section-title">The Story of Us</h2>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-content">
+        <div class="tl-photo" onclick="triggerUpload(this)">
+          <input type="file" accept="image/*" onchange="loadPhoto(event,this.parentElement)">
+          <div class="photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>tap to add photo</span></div>
+        </div>
+        <div class="tl-date">📅 Month Day, Year</div>
+        <div class="tl-milestone">The Day We Met 💫</div>
+        <div class="tl-note">This is where it all started. Add your memory of how you two first crossed paths — the butterflies, the smiles, the moment everything changed.</div>
+      </div>
+      <div class="tl-dot"></div><div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div><div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-photo" onclick="triggerUpload(this)">
+          <input type="file" accept="image/*" onchange="loadPhoto(event,this.parentElement)">
+          <div class="photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>tap to add photo</span></div>
+        </div>
+        <div class="tl-date">📅 Month Day, Year</div>
+        <div class="tl-milestone">Our First Date 🌙</div>
+        <div class="tl-note">Where did you go? What did you do? That magical first date where you both knew this was something special.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-content">
+        <div class="tl-photo" onclick="triggerUpload(this)">
+          <input type="file" accept="image/*" onchange="loadPhoto(event,this.parentElement)">
+          <div class="photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>tap to add photo</span></div>
+        </div>
+        <div class="tl-date">📅 Month Day, Year</div>
+        <div class="tl-milestone">We Made It Official 🎀</div>
+        <div class="tl-note">The moment you both said yes — to each other, to this, to everything that followed.</div>
+      </div>
+      <div class="tl-dot"></div><div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div><div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-photo" onclick="triggerUpload(this)">
+          <input type="file" accept="image/*" onchange="loadPhoto(event,this.parentElement)">
+          <div class="photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>tap to add photo</span></div>
+        </div>
+        <div class="tl-date">📅 Month Day, Year</div>
+        <div class="tl-milestone">A Memory We'll Never Forget 🌊</div>
+        <div class="tl-note">Your favourite trip, adventure, or moment together. The kind you'll still talk about years from now.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-content">
+        <div class="tl-photo" onclick="triggerUpload(this)">
+          <input type="file" accept="image/*" onchange="loadPhoto(event,this.parentElement)">
+          <div class="photo-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>tap to add photo</span></div>
+        </div>
+        <div class="tl-date">📅 Month Day, Year</div>
+        <div class="tl-milestone">365 Days of You 🌸</div>
+        <div class="tl-note">Today. One whole year of laughs, hugs, late nights, inside jokes, and choosing each other every single day.</div>
+      </div>
+      <div class="tl-dot"></div><div style="flex:1"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUIZ -->
+<section class="quiz-section">
+  <div class="quiz-inner">
+    <p class="section-label" style="text-align:center;margin-bottom:.4rem">chapter two</p>
+    <h2 class="section-title" style="margin-bottom:2rem">How Well Do You Know Me? 😏</h2>
+    <div class="quiz-card">
+      <div class="quiz-progress-txt" id="quizProgressTxt">Question 1 of 5</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizFill"></div></div>
+
+      <div class="quiz-q active" id="q0">
+        <div class="quiz-question">What's my go-to morning drink? ☀️</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,0,0)">Tea 🍵</button>
+          <button class="quiz-opt" onclick="answer(this,0,1)">Coffee ☕</button>
+          <button class="quiz-opt" onclick="answer(this,0,2)">Milk 🥛</button>
+          <button class="quiz-opt" onclick="answer(this,0,3)">Water 💧</button>
+        </div>
+        <div class="quiz-feedback" id="fb0"></div>
+        <button class="quiz-next" id="next0" onclick="nextQ(1)">Next →</button>
+      </div>
+
+      <div class="quiz-q" id="q1">
+        <div class="quiz-question">Which side of the bed do I sleep on? 🛏️</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,1,0)">Left side</button>
+          <button class="quiz-opt" onclick="answer(this,1,1)">Right side</button>
+          <button class="quiz-opt" onclick="answer(this,1,2)">Starfish — the whole bed 😂</button>
+          <button class="quiz-opt" onclick="answer(this,1,3)">No preference, wherever 😴</button>
+        </div>
+        <div class="quiz-feedback" id="fb1"></div>
+        <button class="quiz-next" id="next1" onclick="nextQ(2)">Next →</button>
+      </div>
+
+      <div class="quiz-q" id="q2">
+        <div class="quiz-question">My punctuality style? ⏰</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,2,0)">Always late (fashionably) 💅</button>
+          <button class="quiz-opt" onclick="answer(this,2,1)">Always early 🤓</button>
+          <button class="quiz-opt" onclick="answer(this,2,2)">Exactly on time</button>
+          <button class="quiz-opt" onclick="answer(this,2,3)">Depends on my mood 🤷</button>
+        </div>
+        <div class="quiz-feedback" id="fb2"></div>
+        <button class="quiz-next" id="next2" onclick="nextQ(3)">Next →</button>
+      </div>
+
+      <div class="quiz-q" id="q3">
+        <div class="quiz-question">Me watching a sad movie… 🎬</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,3,0)">Full-on movie crier 😭</button>
+          <button class="quiz-opt" onclick="answer(this,3,1)">Pretend I'm totally fine</button>
+          <button class="quiz-opt" onclick="answer(this,3,2)">Cry then deny it happened</button>
+          <button class="quiz-opt" onclick="answer(this,3,3)">Stone cold, zero tears 🗿</button>
+        </div>
+        <div class="quiz-feedback" id="fb3"></div>
+        <button class="quiz-next" id="next3" onclick="nextQ(4)">Next →</button>
+      </div>
+
+      <div class="quiz-q" id="q4">
+        <div class="quiz-question">Sweet or salty snacks — what's my answer? 🍫🍟</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,4,0)">Sweet all the way 🍫</button>
+          <button class="quiz-opt" onclick="answer(this,4,1)">Salty forever 🍟</button>
+          <button class="quiz-opt" onclick="answer(this,4,2)">Both equally — why choose?!</button>
+          <button class="quiz-opt" onclick="answer(this,4,3)">Neither, I'm boring 😅</button>
+        </div>
+        <div class="quiz-feedback" id="fb4"></div>
+        <button class="quiz-next" id="next4" onclick="showResult()">See Results 🌸</button>
+      </div>
+
+      <div class="quiz-result" id="quizResult">
+        <div class="quiz-score-big" id="scoreBig"></div>
+        <div class="quiz-verdict" id="quizVerdict"></div>
+        <div class="quiz-verdict-sub" id="quizSub"></div>
+        <button class="quiz-retry" onclick="resetQuiz()">Try Again 🔄</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOVE LETTER -->
+<div class="letter-wrap">
+  <div class="letter-card">
+    <p class="letter-label">a note from my heart</p>
+    <h2 class="letter-title">To the One I Choose Every Day</h2>
+    <div class="letter-body">I never imagined one year could hold so much.
+
+So many small moments that somehow became everything — the way you laugh at your own jokes before the punchline, the comfortable silence we can sit in, the way you make ordinary days feel like something worth remembering.
+
+Loving you has been the easiest thing I've ever done, and the most wonderful surprise.
+
+Here's to every year that follows. I'd choose you again in every one of them.
+
+    </div>
+    <div class="letter-sign">Forever yours 🌸</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="hearts">🌸 💕 🌸</div>
+  <p style="margin-top:.8rem">Happy 1st Anniversary</p>
+</footer>
+
+<script>
+  const colors = ['#f2c4ce','#fde8ed','#e8dff5','#f9d5df','#d6c8f0'];
+  const bg = document.getElementById('petalBg');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${8+Math.random()*10}px;height:${12+Math.random()*14}px;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*12}s;border-radius:${Math.random()>.5?'50% 0 50% 0':'0 50% 0 50%'};`;
+    bg.appendChild(p);
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.tl-item').forEach(el => obs.observe(el));
+
+  function triggerUpload(el) { el.querySelector('input[type="file"]').click(); }
+  function loadPhoto(event, photoEl) {
+    const file = event.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      let img = photoEl.querySelector('img');
+      if (!img) { img = document.createElement('img'); photoEl.appendChild(img); }
+      img.src = e.target.result;
+      photoEl.querySelector('.photo-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // correct: milk(2), no preference(3), always late(0), stone cold(3), both(2)
+  const correct = [2, 3, 0, 3, 2];
+  const funnyRight = [
+    "Yes!! Milk gang 🥛 you know me so well!",
+    "Haha exactly — wherever comfort calls 😴",
+    "Late and PROUD 💅 fashionably, always.",
+    "Not a single tear. Pure ice. 🗿",
+    "Can't choose, won't choose — both or nothing! 🍫🍟"
+  ];
+  const funnyWrong = [
+    "It's MILK!! 🥛 Surprising, right?",
+    "Wherever I want — no preference at all 😂",
+    "Always late babe. ALWAYS. ⏰😬",
+    "Stone cold! Zero tears. I don't cry, I observe. 🗿",
+    "BOTH!! How could you not know this 😭"
+  ];
+  let score = 0;
+
+  function answer(btn, qIdx, chosen) {
+    btn.parentElement.querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+    const fb = document.getElementById('fb'+qIdx);
+    if (chosen === correct[qIdx]) {
+      btn.classList.add('correct'); score++;
+      fb.textContent = '✅ ' + funnyRight[qIdx];
+    } else {
+      btn.classList.add('wrong');
+      btn.parentElement.querySelectorAll('.quiz-opt')[correct[qIdx]].classList.add('reveal');
+      fb.textContent = '❌ ' + funnyWrong[qIdx];
+    }
+    fb.classList.add('show');
+    document.getElementById('next'+qIdx).style.display = 'inline-block';
+    document.getElementById('quizFill').style.width = ((qIdx+1)/5*100)+'%';
+  }
+
+  function nextQ(n) {
+    document.getElementById('q'+(n-1)).classList.remove('active');
+    document.getElementById('q'+n).classList.add('active');
+    document.getElementById('quizProgressTxt').textContent = 'Question '+(n+1)+' of 5';
+  }
+
+  function showResult() {
+    document.getElementById('q4').classList.remove('active');
+    document.getElementById('quizResult').classList.add('active');
+    document.getElementById('quizFill').style.width = '100%';
+    document.getElementById('quizProgressTxt').textContent = 'Results! 🎉';
+    document.getElementById('scoreBig').textContent = score + ' / 5';
+    const verdicts = [
+      ['Do we even know each other? 😭', "It's okay… you have 365 more days to study me 📖"],
+      ['Getting warmer… 🌸', "You got a few right! We'll call it a work in progress 😄"],
+      ['Not bad at all! 🥰', "You know me pretty well — but there's always more to discover 💕"],
+      ['Pretty good!! 💫', "You really pay attention. I love that about you 🌸"],
+      ['You KNOW me!! 🎉', "A perfect score?! You've been paying very close attention 😍💕"]
+    ];
+    const v = verdicts[score];
+    document.getElementById('quizVerdict').textContent = v[0];
+    document.getElementById('quizSub').textContent = v[1];
+  }
+
+  function resetQuiz() {
+    score = 0;
+    document.getElementById('quizResult').classList.remove('active');
+    for (let i = 0; i < 5; i++) {
+      const q = document.getElementById('q'+i);
+      q.classList.remove('active');
+      q.querySelectorAll('.quiz-opt').forEach(o => { o.disabled=false; o.className='quiz-opt'; });
+      const fb = document.getElementById('fb'+i);
+      fb.textContent=''; fb.classList.remove('show');
+      document.getElementById('next'+i).style.display='none';
+    }
+    document.getElementById('q0').classList.add('active');
+    document.getElementById('quizFill').style.width='0%';
+    document.getElementById('quizProgressTxt').textContent='Question 1 of 5';
+  }
+</script>
+</body>
+</html>
